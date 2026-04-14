@@ -7,8 +7,8 @@ import {
   UserBlockedException,
 } from "../exceptions/auth.exception.js";
 import userRepository from "../repositories/user-repository.js";
-import type { JwtPayload } from "../types/auth.js";
-import type { LoginInput, PublicUser, RegisterInput } from "../types/user.js";
+import type { JwtPayload, LoginInput, RegisterInput } from "../types/auth.js";
+import type { PublicUser } from "../types/user.js";
 import { signAccessToken, verifyToken } from "../utils/jwt.js";
 import { comparePassword, hashPassword } from "../utils/password.js";
 import { UserNotFoundException } from "../exceptions/user.exception.js";

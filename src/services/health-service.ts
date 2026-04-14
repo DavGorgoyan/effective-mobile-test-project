@@ -1,11 +1,5 @@
 import prisma from '../lib/prisma.js';
-
-export interface HealthStatus {
-  readonly status: 'ok' | 'degraded';
-  readonly services: {
-    readonly database: 'up' | 'down';
-  };
-}
+import type { HealthStatus } from '../types/health.js';
 
 export const getHealthStatus = async (): Promise<HealthStatus> => {
   try {

@@ -1,9 +1,13 @@
 import type { Request, Response } from 'express';
+import { RouteNotFoundException } from '../exceptions/app.exception.js';
+import { sendError } from '../utils/api-response.js';
 
 const notFound = (req: Request, res: Response): void => {
-  res.status(404).json({
-    error: 'NOT_FOUND',
-    message: `Route not found: ${req.method} ${req.originalUrl}`,
+  const routeNotFound = new RouteNotFoundException(`${req.method} ${req.originalUrl}`);
+
+  sendError(res, routeNotFound.statusCode, {
+    code: routeNotFound.code,
+    message: routeNotFound.message,
   });
 };
 

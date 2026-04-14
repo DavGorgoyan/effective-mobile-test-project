@@ -1,37 +1,44 @@
-import { ZodError } from 'zod';
 import type { NextFunction, Request, Response } from 'express';
-import type { ApiErrorResponse } from '../types/index.js';
-
-interface AppError extends Error {
-  readonly statusCode?: number;
-  readonly code?: string;
-}
+import { ZodError } from 'zod';
+import {
+  AppException,
+  InternalServerException,
+  ValidationException,
+} from '../exceptions/app.exception.js';
+import { sendError } from '../utils/api-response.js';
 
 const errorHandler = (
-  error: AppError,
+  error: Error,
   _req: Request,
-  res: Response<ApiErrorResponse>,
+  res: Response,
   _next: NextFunction,
 ): void => {
   if (error instanceof ZodError) {
-    res.status(400).json({
-      error: 'VALIDATION_ERROR',
-      message: 'Request validation failed',
-      details: error.issues,
+    const validationError = new ValidationException(error.issues);
+
+    sendError(res, validationError.statusCode, {
+      code: validationError.code,
+      message: validationError.message,
+      details: validationError.details,
     });
     return;
   }
 
-  const statusCode: number = error.statusCode ?? 500;
-  const errorCode: string = error.code ?? 'INTERNAL_ERROR';
-
-  if (statusCode >= 500) {
-    console.error(error);
+  if (error instanceof AppException) {
+    sendError(res, error.statusCode, {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+    });
+    return;
   }
 
-  res.status(statusCode).json({
-    error: errorCode,
-    message: error.message || 'An unexpected error occurred',
+  console.error(error);
+
+  const internalError = new InternalServerException();
+  sendError(res, internalError.statusCode, {
+    code: internalError.code,
+    message: internalError.message,
   });
 };
 

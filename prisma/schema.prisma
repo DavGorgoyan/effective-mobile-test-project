@@ -6,3 +6,22 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id          String   @id @default(uuid())
+  fullName    String
+  dateOfBirth DateTime
+  email       String   @unique
+  password    String
+  role        UserRole @default(USER)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("users")
+}

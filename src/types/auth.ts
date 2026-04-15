@@ -1,4 +1,5 @@
 import { UserRole } from "@prisma/client";
+import { PublicUser } from "./user.js";
 
 export interface AuthUser {
   readonly id: string;
@@ -20,4 +21,15 @@ export interface RegisterInput {
 export interface LoginInput {
   readonly email: string;
   readonly password: string;
+}
+
+export interface RegisterUserData {
+  readonly user: Pick<
+    PublicUser,
+    "id" | "fullName" | "email" | "role" | "isActive"
+  >;
+}
+
+export interface LoginData {
+  readonly accessToken: string;
 }

@@ -1,19 +1,8 @@
 import type { Request, Response } from "express";
 import authService from "../../services/auth-service.js";
 import type { ApiResponse } from "../../types/api-response.js";
-import type { PublicUser } from "../../types/user.js";
 import { sendSuccess } from "../../utils/api-response.js";
-
-interface RegisterUserData {
-  readonly user: Pick<
-    PublicUser,
-    "id" | "fullName" | "email" | "role" | "isActive"
-  >;
-}
-
-interface LoginData {
-  readonly accessToken: string;
-}
+import { LoginData, RegisterUserData } from "../../types/auth.js";
 
 export const registerUser = async (
   req: Request,
